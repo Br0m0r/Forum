@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+   <script>
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.documentElement.classList.add('dark-mode');
+    }
+  </script>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/dark.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+<body>
+<header class="header">
+  <div class="logo">
+    <a href="/">
+    <img id="logo" src="/static/img/logo_white.png" alt="Forum Logo">
+    </a>
+  </div>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/register">Register</a>
+  </nav>
+</header>
+  <div class="container" style="justify-content: center;">
+    <main class="main-content" style="max-width: 400px; margin: 2rem auto;">
+      <section class="auth-card new-post">
+        <h2 style="margin-top:0;">Create an Account</h2>
+        <form action="/register" method="POST">
+          <div class="form-control">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required autocomplete="username" />
+          </div>
+          <div class="form-control">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required autocomplete="email" />
+          </div>
+          <div class="form-control">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required autocomplete="new-password" />
+          </div>
+          <button type="submit" class="btn">Register</button>
+        </form>
+        <p style="margin-top:12px;">
+          Already have an account?
+          <a href="/login">Login here</a>
+        </p>
+        {{if .}}
+          <p style="color:red; margin-top:16px;">{{.}}</p>
+        {{end}}
+      </section>
+    </main>
+  </div>
+  <script src="/static/js/darkmode.js"></script>
+</body>
+</html>

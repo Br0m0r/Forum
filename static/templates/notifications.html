@@ -1,0 +1,39 @@
+{{ define "notifications.html" }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Forum | Notifications</title>
+     <script>
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.documentElement.classList.add('dark-mode');
+    }
+  </script>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/dark.css">
+</head>
+<body>
+
+  {{ template "header" . }}
+
+  <main class="container notifications-page">
+    <h1>Notifications</h1>
+    <div class="notifications-list">
+      {{ range .Notifications }}
+      <a href="/post?id={{ .PostID }}" class="notification-card {{ if not .IsRead }}unread{{ end }}">
+        <div class="notification-content">
+          <span class="notification-text">{{ .DisplayText }}</span>
+          <time class="notification-time">{{ .CreatedAt.Format "Jan 2, 2006 15:04" }}</time>
+        </div>
+      </a>
+      {{ else }}
+      <div class="notification-empty">You have no notifications.</div>
+      {{ end }}
+    </div>
+  </main>
+
+  <script src="/static/js/darkmode.js" defer></script>
+  <script src="/static/js/notifications.js" defer></script>
+</body>
+</html>
+{{ end }}

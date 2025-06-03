@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+   <script>
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.documentElement.classList.add('dark-mode');
+    }
+  </script>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/dark.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+<body>
+<header class="header">
+  <div class="logo">
+    <a href="/">
+     <img id="logo" src="/static/img/logo_white.png" alt="Forum Logo">
+    </a>
+  </div>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/login">Login</a>
+  </nav>
+</header>
+  <div class="container" style="justify-content: center;">
+    <main class="main-content" style="max-width: 400px; margin: 2rem auto;">
+      <section class="auth-card">
+        <h2 style="margin-top:0; text-align:center; color:#ff4500;">Login</h2>
+        <form action="/login" method="POST" autocomplete="on">
+          <div class="form-control">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required autocomplete="email" />
+          </div>
+          <div class="form-control">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required autocomplete="current-password" />
+          </div>
+          <button type="submit" class="btn">Login</button>
+        </form>
+        <p style="margin-top:14px; text-align:center;">
+          Don't have an account?
+          <a href="/register" style="color:#0079d3; text-decoration:underline;">Register here</a>
+        </p>
+        <p class="or-separator">— OR —</p>
+        <div class="social-login">
+          <a href="/auth/google" class="social-btn google">
+            <i class="fab fa-google"></i> Log in with Google
+          </a>
+          <a href="/auth/facebook" class="social-btn facebook">
+            <i class="fab fa-facebook"></i> Log in with Facebook
+          </a>
+          <a href="/auth/github" class="social-btn github">
+            <i class="fab fa-github"></i> Log in with GitHub
+          </a>
+        </div>
+        {{if .}}
+          <p style="color: red; margin-top:16px; text-align:center;">{{.}}</p>
+        {{end}}
+      </section>
+    </main>
+  </div>
+  <script src="/static/js/darkmode.js"></script>
+</body>
+</html>

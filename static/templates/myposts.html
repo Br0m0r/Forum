@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Posts</title>
+    <script>
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.documentElement.classList.add('dark-mode');
+    }
+    </script>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/dark.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+<body>
+    {{ template "header" . }}
+    <div class="container">
+        <main class="main-content">
+            <h1 style="margin-bottom:1.5rem;">My Posts</h1>
+
+            <!-- Authored Posts -->
+            <section class="posts-feed">
+                <h2>My Authored Posts</h2>
+                {{ if .Authored }}
+                  {{ range .Authored }}
+                    <article class="post-card">
+                      <div class="vote-section"
+                           data-post-id="{{ .ID }}"
+                           data-user-vote="{{ .UserVote }}">
+                        <button class="vote-btn" data-post-id="{{ .ID }}" data-is-like="1" title="Upvote">
+                          <i class="fa fa-arrow-up"></i>
+                        </button>
+                        <div class="vote-count likes">{{ .Likes_count }}</div>
+                        <button class="vote-btn" data-post-id="{{ .ID }}" data-is-like="0" title="Downvote">
+                          <i class="fa fa-arrow-down"></i>
+                        </button>
+                        <div class="vote-count dislikes">{{ .Dislikes_count }}</div>
+                      </div>
+                      <div class="post-content">
+                        <a href="/post?id={{ .ID }}" class="post-link">
+                          <h3>{{ .Title }}</h3>
+                          <p>{{ .Content }}</p>
+                        </a>
+                        <div class="post-meta">
+                          {{ if .Image }}
+                            <img src="/static/{{ .Image }}" alt="Post image" style="max-width:400px;height:auto;">
+                          {{ end }}<br/>
+                          <small>
+                            Posted by <strong>{{ .UserName }}</strong>
+                            {{ if .CategoryNames }} in
+                              {{ range $i, $cat := .CategoryNames }}
+                                {{ if $i }}, {{ end }}{{ $cat }}
+                              {{ end }}
+                            {{ end }}
+                            • {{ .CreatedAt.Format "Jan 2, 2006 15:04" }}
+                          </small>
+                        </div>
+
+                        <!-- Post actions -->
+                        <div class="post-actions">
+                          <button type="button"
+                                  class="nav-button edit-post-btn"
+                                  data-post-id="{{ .ID }}">
+                            Edit
+                          </button>
+                          <form action="/post/delete" method="post"
+                                style="display:inline-block;"
+                                onsubmit="return confirm('Are you sure you want to delete this post?');">
+                            <input type="hidden" name="post_id" value="{{ .ID }}">
+                            <button type="submit" class="nav-button">Delete</button>
+                          </form>
+                        </div>
+
+                        <form id="edit-post-form-{{ .ID }}"
+                              class="edit-form"
+                              action="/post/edit"
+                              method="post">
+                          <input type="hidden" name="post_id" value="{{ .ID }}">
+                          <textarea name="new_content">{{ .Content }}</textarea>
+                          <div style="margin-top:0.5rem;">
+                            <button type="submit" class="nav-button">Save</button>
+                            <button type="button"
+                                    class="nav-button edit-post-btn"
+                                    data-post-id="{{ .ID }}">
+                              Cancel
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </article>
+                  {{ end }}
+                {{ else }}
+                  <p>You haven't authored any posts yet.</p>
+                {{ end }}
+            </section>
+            <hr>
+
+            <!-- Reacted Posts -->
+            <section class="posts-feed">
+                <h2>Posts I Have Reacted To</h2>
+                {{ if .Reacted }}
+                  {{ range .Reacted }}
+                    <article class="post-card">
+                      <div class="vote-section"
+                           data-post-id="{{ .ID }}"
+                           data-user-vote="{{ .UserVote }}">
+                        <button class="vote-btn" data-post-id="{{ .ID }}" data-is-like="1" title="Upvote">
+                          <i class="fa fa-arrow-up"></i>
+                        </button>
+                        <div class="vote-count likes">{{ .Likes_count }}</div>
+                        <button class="vote-btn" data-post-id="{{ .ID }}" data-is-like="0" title="Downvote">
+                          <i class="fa fa-arrow-down"></i>
+                        </button>
+                        <div class="vote-count dislikes">{{ .Dislikes_count }}</div>
+                      </div>
+                      <div class="post-content">
+                        <a href="/post?id={{ .ID }}" class="post-link">
+                          <h3>{{ .Title }}</h3>
+                          <p>{{ .Content }}</p>
+                        </a>
+                        <div class="post-meta">
+                          {{ if .Image }}
+                            <img src="/static/{{ .Image }}" alt="Post image" style="max-width:400px;height:auto;">
+                          {{ end }}<br/>
+                          <small>
+                            Posted by <strong>{{ .UserName }}</strong>
+                            {{ if .CategoryNames }} in
+                              {{ range $i, $cat := .CategoryNames }}
+                                {{ if $i }}, {{ end }}{{ $cat }}
+                              {{ end }}
+                            {{ end }}
+                            • {{ .CreatedAt.Format "Jan 2, 2006 15:04" }}
+                          </small>
+                        </div>
+
+                        {{ if eq .UserName $.Username }}
+                        <!-- Post actions (only on your own reacted posts) -->
+                        <div class="post-actions">
+                          <button type="button"
+                                  class="nav-button edit-post-btn"
+                                  data-post-id="{{ .ID }}">
+                            Edit
+                          </button>
+                          <form action="/post/delete" method="post"
+                                style="display:inline-block;"
+                                onsubmit="return confirm('Are you sure you want to delete this post?');">
+                            <input type="hidden" name="post_id" value="{{ .ID }}">
+                            <button type="submit" class="nav-button">Delete</button>
+                          </form>
+                        </div>
+
+                        <form id="edit-post-form-{{ .ID }}"
+                              class="edit-form"
+                              action="/post/edit"
+                              method="post">
+                          <input type="hidden" name="post_id" value="{{ .ID }}">
+                          <textarea name="new_content">{{ .Content }}</textarea>
+                          <div style="margin-top:0.5rem;">
+                            <button type="submit" class="nav-button">Save</button>
+                            <button type="button"
+                                    class="nav-button edit-post-btn"
+                                    data-post-id="{{ .ID }}">
+                              Cancel
+                            </button>
+                          </div>
+                        </form>
+                        {{ end }}
+
+                      </div>
+                    </article>
+                  {{ end }}
+                {{ else }}
+                  <p>You haven't reacted to any posts yet.</p>
+                {{ end }}
+            </section>
+            <hr>
+
+            <!-- Commented Posts -->
+            <section class="posts-feed">
+                <h2>Posts I Have Commented On</h2>
+                {{ if .Posts }}
+                  {{ range .Posts }}
+                    <article class="post-card">
+                      <div class="vote-section"
+                           data-post-id="{{ .ID }}"
+                           data-user-vote="{{ .UserVote }}">
+                        <button class="vote-btn" data-post-id="{{ .ID }}" data-is-like="1" title="Upvote">
+                          <i class="fa fa-arrow-up"></i>
+                        </button>
+                        <div class="vote-count likes">{{ .Likes_count }}</div>
+                        <button class="vote-btn" data-post-id="{{ .ID }}" data-is-like="0" title="Downvote">
+                          <i class="fa fa-arrow-down"></i>
+                        </button>
+                        <div class="vote-count dislikes">{{ .Dislikes_count }}</div>
+                      </div>
+                      <div class="post-content">
+                        <a href="/post?id={{ .ID }}" class="post-link">
+                          <h3>{{ .Title }}</h3>
+                          <p>{{ .Content }}</p>
+                        </a>
+                        <div class="post-meta">
+                          {{ if .Image }}
+                            <img src="/static/{{ .Image }}" alt="Post image" style="max-width:400px;height:auto;">
+                          {{ end }}<br/>
+                          <small>
+                            Posted by <strong>{{ .UserName }}</strong>
+                            • {{ .CreatedAt.Format "Jan 2, 2006 15:04" }}
+                          </small>
+                        </div>
+
+                        {{ if eq .UserName $.Username }}
+                        <!-- Post actions on your own commented-posts -->
+                        <div class="post-actions">
+                          <button type="button"
+                                  class="nav-button edit-post-btn"
+                                  data-post-id="{{ .ID }}">
+                            Edit
+                          </button>
+                          <form action="/post/delete" method="post"
+                                style="display:inline-block;"
+                                onsubmit="return confirm('Are you sure you want to delete this post?');">
+                            <input type="hidden" name="post_id" value="{{ .ID }}">
+                            <button type="submit" class="nav-button">Delete</button>
+                          </form>
+                        </div>
+
+                        <form id="edit-post-form-{{ .ID }}"
+                              class="edit-form"
+                              action="/post/edit"
+                              method="post">
+                          <input type="hidden" name="post_id" value="{{ .ID }}">
+                          <textarea name="new_content">{{ .Content }}</textarea>
+                          <div style="margin-top:0.5rem;">
+                            <button type="submit" class="nav-button">Save</button>
+                            <button type="button"
+                                    class="nav-button edit-post-btn"
+                                    data-post-id="{{ .ID }}">
+                              Cancel
+                            </button>
+                          </div>
+                        </form>
+                        {{ end }}
+
+                        <!-- All your comments on this post -->
+                        <div class="user-comments">
+                          <strong>Your comments:</strong>
+                          {{ range .Comment }}
+                            <div class="user-comment" style="margin-top:0.75rem;">
+                              <p style="margin:0.3rem 0;">{{ .Content }}</p>
+                              <strong>On {{ .CreatedAt.Format "Jan 2, 2006 15:04" }}</strong>
+
+                              <!-- Comment actions -->
+                              <div class="post-actions" style="margin-top:0.5rem;">
+                                <button type="button"
+                                        class="nav-button edit-comment-btn"
+                                        data-comment-id="{{ .ID }}">
+                                  Edit
+                                </button>
+                                <form action="/comment/delete" method="post"
+                                      style="display:inline-block;"
+                                      onsubmit="return confirm('Are you sure you want to delete this comment?');">
+                                  <input type="hidden" name="comment_id" value="{{ .ID }}">
+                                  <button type="submit" class="nav-button">Delete</button>
+                                </form>
+                              </div>
+
+                              <form id="edit-comment-form-{{ .ID }}"
+                                    class="edit-form"
+                                    action="/comment/edit"
+                                    method="post">
+                                <input type="hidden" name="contentID" value="{{ .ID }}">
+                                <textarea name="content">{{ .Content }}</textarea>
+                                <div style="margin-top:0.5rem;">
+                                  <button type="submit" class="nav-button">Save</button>
+                                  <button type="button"
+                                          class="nav-button edit-comment-btn"
+                                          data-comment-id="{{ .ID }}">
+                                    Cancel
+                                  </button>
+                                </div>
+                              </form>
+                            </div>
+                          {{ end }}
+                        </div>
+                      </div>
+                    </article>
+                  {{ end }}
+                {{ else }}
+                  <p>You haven't commented on any posts yet.</p>
+                {{ end }}
+            </section>
+
+        </main>
+    </div>
+
+    <script src="/static/js/darkmode.js"></script>
+    <script src="/static/js/ld.js"></script>
+    <script src="/static/js/warning.js"></script>
+    <script src="/static/js/notifications.js"></script>
+    <script src="/static/js/editComment.js"></script>
+    <script src="/static/js/editPost.js"></script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forum Home</title>
+     <script>
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.documentElement.classList.add('dark-mode');
+    }
+  </script>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/dark.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+<body>
+  {{ template "header" . }}
+
+<div class="container">
+  <aside class="filter-sidebar">
+    <h3>Categories</h3>
+    <ul class="category-list">
+      <li>
+        <a href="/" {{if eq .SelectedCategory 0}}style="font-weight:bold; color:#ff4500;"{{end}}>All Categories</a>
+      </li>
+      {{range .Categories}}
+      <li>
+        <a href="/?category={{.ID}}" {{if eq $.SelectedCategory .ID}}style="font-weight:bold; color:#ff4500;"{{end}}>{{.Name}}</a>
+      </li>
+      {{end}}
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    {{if .Username}}
+    <section class="new-post">
+      <h2>Create a New Post</h2>
+      <form action="/newpost" method="POST" enctype="multipart/form-data" autocomplete="off">
+        <div class="form-control">
+          <label>Categories</label>
+          <div id="category-warning" style="color:#ff4500; margin-bottom:0.7rem; display:none;">
+            Please select at least one category.
+          </div>
+          <div class="category-pills">
+            {{range .Categories}}
+            <label class="category-pill">
+              <input type="checkbox" name="categories" value="{{.ID}}">
+              <span>{{.Name}}</span>
+            </label>
+            {{end}}
+          </div>
+        </div>
+
+        <div class="form-control">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" required maxlength="120" placeholder="Post title">
+        </div>
+
+        <div class="form-control">
+          <label for="content">Description</label>
+          <textarea id="content" name="content" required maxlength="1000" placeholder="What's on your mind?"></textarea>
+        </div>
+        <div class="form-control">
+       <label for="image">Upload Image</label>
+        <input type="file" id="image" name="image" accept="image/jpeg, image/png, image/gif">
+        <small>Only  JPEG, PNG, or GIF. Max size: 20MB.</small>
+         <br>
+          <img id="preview" src="#" alt="Image Preview" style="max-width: 300px; margin-top: 10px; display: none;">
+        </div>
+        <button type="submit" class="btn">Post</button>
+      </form>
+    </section>
+    {{end}}
+
+    <section class="posts-feed">
+      <h2>Recent Posts</h2>
+      {{range .Posts}}
+      <article class="post-card">
+         <div class="vote-section"
+          data-post-id="{{.ID}}"
+          data-user-vote="{{.UserVote}}">
+          <button class="vote-btn" data-post-id="{{.ID}}" data-is-like="1" title="Upvote">
+            <i class="fa fa-arrow-up"></i>
+          </button>
+          <div class="vote-count likes">{{.Likes_count}}</div>
+          <button class="vote-btn" data-post-id="{{.ID}}" data-is-like="0" title="Downvote">
+            <i class="fa fa-arrow-down"></i>
+          </button>
+          <div class="vote-count dislikes">{{.Dislikes_count}}</div>
+        </div>
+        <div class="post-content">
+          <a href="/post?id={{.ID}}" class="post-link">
+            <h3>{{.Title}}</h3>
+            <p>{{.Content}}</p>
+          </a>
+          <div class="post-meta">
+      {{if .Image}}
+         <img src="/static/{{.Image}}" alt="Post image" style="max-width: 400px; height: auto;">
+            {{end}}
+            <br/>
+            <small>
+              Posted by <strong>{{.UserName}}</strong>
+              {{if .CategoryNames}} in 
+                {{range $index, $cat := .CategoryNames}}
+                  {{if $index}}, {{end}}{{ $cat }}
+                {{end}}
+              {{end}}
+              • {{.CreatedAt.Format "Jan 2, 2006 15:04"}}
+            </small>
+          </div>
+          
+          <!-- Post actions (only shown to author) -->
+          {{if eq .UserName $.Username}}
+          <div class="post-actions" style="margin-top:0.75rem;">
+            <button type="button" 
+                    class="nav-button edit-post-btn" 
+                    data-post-id="{{.ID}}">
+              Edit
+            </button>
+            <form action="/post/delete" method="post" 
+                  style="display:inline-block;" 
+                  onsubmit="return confirm('Are you sure you want to delete this post?');">
+              <input type="hidden" name="post_id" value="{{.ID}}">
+              <button type="submit" class="nav-button">Delete</button>
+            </form>
+          </div>
+          
+          <!-- Post edit form (hidden by default) -->
+          <form id="edit-post-form-{{.ID}}" 
+                class="edit-form" 
+                action="/post/edit" 
+                method="post" 
+                style="display:none;">
+            <input type="hidden" name="post_id" value="{{.ID}}">
+            <textarea name="new_content">{{.Content}}</textarea>
+            <div style="margin-top:0.5rem;">
+              <button type="submit" class="nav-button">Save</button>
+              <button type="button" 
+                      class="nav-button edit-post-btn" 
+                      data-post-id="{{.ID}}">
+                Cancel
+              </button>
+            </div>
+          </form>
+          {{end}}
+        </div>
+      </article>
+      {{else}}
+      <p style="color:#888; margin:1.5rem 0;">No posts found for this category.</p>
+      {{end}}
+    </section>
+  </main>
+</div>
+
+<script src="/static/js/darkmode.js"></script>
+<script src="/static/js/ld.js"></script>
+<script src="/static/js/warning.js"></script>
+<script src="/static/js/imagePreview.js"></script>
+<script src="/static/js/editPost.js"></script>
+<script src="/static/js/notifications.js"></script>
+
+</body>
+</html>

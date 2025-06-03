@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Failed</title>
+     <script>
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.documentElement.classList.add('dark-mode');
+    }
+  </script>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/dark.css">
+</head>
+<body class="error-page">
+    <div class="container error-container">
+        <h1>Login Failed</h1>
+        <p>We couldn't log you in with <strong>{{.}}</strong>.</p>
+        <a href="/" class="btn home-btn">Back to Home</a>
+    </div>
+    <script src="/static/js/darkmode.js"></script>
+</body>
+</html>

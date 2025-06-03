@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+     <script>
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.documentElement.classList.add('dark-mode');
+    }
+  </script>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/dark.css">
+</head>
+<body class="error-page">
+    <div class="container error-container">
+        <h1>404</h1>
+        <p>Oops! The page you're looking for doesn't exist.<br>
+        Maybe it was removed, renamed, or never existed.</p>
+        <div style="margin-top:1.5rem;">
+            <a href="/" class="btn home-btn" style="width:auto; min-width:120px; display:inline-block;">Back to Home</a>
+        </div>
+    </div>
+    <script src="/static/js/darkmode.js"></script>
+</body>
+</html>

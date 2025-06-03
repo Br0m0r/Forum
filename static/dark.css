@@ -1,0 +1,234 @@
+/* DARK MODE OVERRIDES FOR FORUM */
+
+html.dark-mode,
+html.dark-mode .error-page {
+  background: #1a1a1b;
+  color: #d7dadc;
+}
+
+html.dark-mode,
+html.dark-mode body {
+  background: #1a1a1b;
+  color: #d7dadc;
+}
+
+/* Header */
+html.dark-mode .header {
+  background: #1a1a1b;
+  border-bottom: 1px solid #272729;
+}
+html.dark-mode .header nav a {
+  color: #d7dadc;
+}
+html.dark-mode .header nav a:hover {
+  color: #ffb000;
+}
+
+/* Sidebar */
+html.dark-mode .filter-sidebar {
+  background: #161617;
+  color: #d7dadc;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  border: 1px solid #272729;
+}
+html.dark-mode .filter-sidebar h3 {
+  color: #ffb000;
+}
+
+/* Main content */
+html.dark-mode .main-content {
+  color: #d7dadc;
+}
+
+html.dark-mode .container {
+  background: #181a1b;
+  color: #d7dadc;
+}
+
+/* New post form */
+html.dark-mode .new-post {
+  background: #161617;
+  color: #d7dadc;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  border: 1px solid #272729;
+}
+html.dark-mode .new-post h2 {
+  color: #ffb000;
+}
+html.dark-mode .new-post .form-control label {
+  color: #ffb000;
+}
+html.dark-mode .new-post input[type="text"],
+html.dark-mode .new-post textarea {
+  background: #232324;
+  color: #d7dadc;
+  border: 1px solid #444;
+}
+html.dark-mode .new-post input[type="text"]:focus,
+html.dark-mode .new-post textarea:focus {
+  background: #232324;
+  border: 1.5px solid #ffb000;
+  color: #fff;
+}
+html.dark-mode .new-post button {
+  background: #ffb000;
+  color: #232324;
+}
+html.dark-mode .new-post button:hover {
+  background: #ff4500;
+  color: #fff;
+}
+
+/* Post cards */
+html.dark-mode .post-card {
+  background: #161617;
+  color: #d7dadc;
+  border-left: 4px solid #ffb000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+}
+html.dark-mode .post-link h3 {
+  color: #fff;
+}
+html.dark-mode .post-link:hover h3 {
+  color: #ffb000;
+}
+html.dark-mode .post-link p {
+  color: #b1b1b3;
+}
+html.dark-mode .post-meta {
+  color: #888;
+}
+
+/* Vote section */
+html.dark-mode .vote-btn {
+  color: #b1b1b3;
+}
+html.dark-mode .vote-btn.active,
+html.dark-mode .vote-btn:hover {
+  color: #ffb000;
+}
+html.dark-mode .vote-count {
+  color: #fff;
+}
+
+/* Comments */
+html.dark-mode .comment-card {
+  background: #232324;
+  color: #d7dadc;
+  border-left: 3px solid #ffb000;
+}
+
+/* Auth card */
+html.dark-mode .auth-card {
+  background: #161617;
+  color: #d7dadc;
+  border: 1px solid #272729;
+}
+html.dark-mode .form-control label {
+  color: #ffb000;
+}
+html.dark-mode .form-control input,
+html.dark-mode .form-control textarea {
+  background: #232324;
+  color: #d7dadc;
+  border: 1px solid #444;
+}
+html.dark-mode .form-control input:focus,
+html.dark-mode .form-control textarea:focus {
+  background: #232324;
+  border: 1.5px solid #ffb000;
+  color: #fff;
+}
+html.dark-mode .btn,
+html.dark-mode .home-btn {
+  background: #ffb000;
+  color: #232324;
+}
+html.dark-mode .btn:hover,
+html.dark-mode .home-btn:hover {
+  background: #ff4500;
+  color: #fff;
+}
+
+/* Error container */
+html.dark-mode .error-container,
+html.dark-mode .container.error-container {
+  background: #232324;
+  color: #d7dadc;
+  border: 1px solid #272729;
+}
+html.dark-mode .error-container h1,
+html.dark-mode .container.error-container h1 {
+  color: #ffb000;
+}
+html.dark-mode .error-container p,
+html.dark-mode .container.error-container p {
+  color: #b1b1b3;
+}
+
+/* Category list */
+html.dark-mode .category-list {
+  background: transparent;
+}
+html.dark-mode .category-list a {
+  color: #d7dadc;
+}
+html.dark-mode .category-list a:hover,
+html.dark-mode .category-list a:focus {
+  background: #232324;
+  color: #ffb000;
+}
+html.dark-mode .category-list strong {
+  color: #ffb000;
+}
+
+/* Category pills */
+html.dark-mode .category-pills {
+  background: transparent;
+}
+html.dark-mode .category-pill {
+  background: #232324;
+  color: #d7dadc;
+  border: 1.5px solid #444;
+}
+html.dark-mode .category-pill input[type="checkbox"]:checked + span,
+html.dark-mode .category-pill:has(input[type="checkbox"]:checked) {
+  background: #ffb000;
+  color: #232324;
+  border-color: #ffb000;
+}
+
+/* Social buttons */
+html.dark-mode .social-btn.facebook {
+  background: #222a42;
+}
+html.dark-mode .social-btn.facebook:hover {
+  background: #1a2035;
+}
+html.dark-mode .social-btn.google {
+  background: #7c2c21;
+}
+html.dark-mode .social-btn.google:hover {
+  background: #b3311a;
+}
+
+/* Misc */
+html.dark-mode .or-separator {
+  color: #b1b1b3;
+}
+
+
+html.dark-mode .user-badge {
+  background: linear-gradient(145deg, #ffaf00, #ff9100);
+  color: #1a1a1a;
+}
+
+html.dark-mode .user-comments {
+   background: #1a1a1a;
+   padding: 1rem;
+   border-left: 4px solid #ffa500;
+   border-radius: 4px;
+   margin-top: 1rem;
+}

@@ -1,0 +1,806 @@
+/* General page background */
+html {
+  overflow-y: scroll;
+}
+
+body {
+  background: #dae0e6;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  color: #1a1a1b;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-bottom: 1px solid #ccc;
+  padding: 0 2rem;
+  position: relative;
+  top: 0;
+  z-index: 100;
+}
+.header nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+
+.logo img {
+  height: 80px;   /* Try 72px for a bigger logo, but still fits in 80px header */
+  width: auto;
+  display: block;
+}
+
+/* define theme vars at the top of your stylesheet */
+:root {
+  --btn-bg: #3a3a3a;
+  --btn-grad-start: #4a4a4a;
+  --btn-grad-end:   #2a2a2a;
+  --btn-hover-start: #5a5a5a;
+  --btn-hover-end:   #3a3a3a;
+  --btn-color: #fafafa;
+  --btn-shadow: rgba(0,0,0,0.4);
+}
+
+/* Container to space buttons evenly */
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Base button look */
+.nav-button {
+  position: relative;
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--btn-color);
+  text-decoration: none;
+  background: linear-gradient(145deg, #a3a8ad, #a3a8ad);
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow:  3px 3px 6px var(--btn-shadow),
+              -3px -3px 6px rgba(255,255,255,0.05);
+  transition: background 0.3s, transform 0.1s;
+  overflow: hidden;
+}
+
+/* Hover / focus state */
+.nav-button:hover,
+.nav-button:focus {
+  background: linear-gradient(145deg, #a3a8ad, #a3a8ad);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+/* Active (click) state */
+.nav-button:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 3px var(--btn-shadow),
+             -1px -1px 3px rgba(255,255,255,0.05);
+}
+
+/* “Logged in as” label styling */
+.nav-button.label {
+  background: none;
+  box-shadow: none;
+  color: #ccc;
+  cursor: default;
+  padding: 0 0.5rem;
+  font-weight: 400;
+}
+/* A popping badge for “Logged in as” */
+.user-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  margin-right: 0.5rem;
+  background: linear-gradient(145deg, #ff4500, #ff4500);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 1rem;
+  box-shadow:
+    2px 2px 4px rgba(0, 0, 0, 0.3),
+   -2px -2px 4px rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+}
+
+/* ── Notification badge styling ─────────────────────────────────────────────── */
+/* ── Notifications Page Styling ────────────────────────────────────────────── */
+.notifications-page h1 {
+  margin-bottom: 1.25rem;
+  color: #ffa500;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+/* Container for the cards */
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+}
+
+/* Individual notification card */
+.notification-card {
+  display: block;
+  background: #2a2a2a;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  border-left: 4px solid transparent;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+/* Unread indicator */
+.notification-card.unread {
+  border-color: #ff4500;
+  background: #333;
+}
+
+/* Hover state */
+.notification-card:hover {
+  background: #3a3a3a;
+}
+
+/* Inner flex layout */
+.notification-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Text and timestamp */
+.notification-text {
+  font-size: 1rem;
+}
+
+.notification-time {
+  font-size: 0.85rem;
+  color: #bbb;
+  white-space: nowrap;
+  margin-left: 1rem;
+}
+
+/* Fallback when no notifications */
+.notification-empty {
+  text-align: center;
+  color: #777;
+  padding: 2rem 0;
+  font-size: 1rem;
+}
+
+/* Override the old .icon positioning for just our bell */
+.bell-icon {
+  position: static !important; /* cancel out the absolute from .icon */
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  stroke: var(--btn-color);      /* ensure it matches your button text */
+}
+
+/* Tuck the notifications and theme toggle flush right */
+.right-controls {
+  margin-left: auto;             /* pushes itself to the far right */
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+
+/* 1) Make sure the parent can show overflow */
+.notif-button {
+  position: relative;
+  overflow: visible;   /* ← allow children to spill out */
+}
+
+/* 2) Push the badge beyond the corner with translate */
+.notif-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%); /* ← move it 50% right & 50% up */
+  /* keep the rest of your styling */
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: #ff4500;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 2px rgba(0,0,0,0.25);
+  pointer-events: none;
+  z-index: 2;         /* ensure it floats on top */
+}
+
+
+.header nav a {
+  margin-left: 1.2rem;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+  
+  
+}
+.header nav a:hover {
+  color: #ff4500;
+}
+
+
+/* Main container */
+.container {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Sidebar */
+.filter-sidebar {
+  width: 220px;
+  min-width: 180px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  padding: 1.2rem 1rem 1.2rem 1.2rem;
+  margin-right: 0.5rem;
+  margin-left: 0;      /* Stick to the left */
+  margin-top: 0;       /* Align with main content */
+  align-self: flex-start; /* Align top with main content */
+}
+
+.filter-sidebar h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.filter-sidebar select {
+  width: 100%;
+  padding: 0.4rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Main content */
+.main-content {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-top: 0;       /* Align with sidebar */
+}
+
+/* New post form */
+.new-post {
+  background: #fff;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 1.1rem 1.2rem; /* Reduced padding for a more clamped look */
+  margin-top: 0rem; /* or 0 if you want perfect alignment */
+}
+
+.new-post h2 {
+  margin-top: 0;
+  color: #ff4500;
+}
+
+.new-post .form-control label {
+  margin-bottom: 0.3rem; /* Reduce space below the label */
+}
+
+.new-post input[type="text"],
+.new-post textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0.5rem 0 1rem 0;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.new-post textarea {
+  resize: none;
+  min-height: 90px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.new-post button {
+  background: #ff4500;
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.new-post button:hover {
+  background: #e03d00;
+}
+
+
+
+/* Posts feed */
+.posts-feed h2 {
+  margin-top: 0;
+  color: #0079d3;
+}
+
+/* Reddit-style post card */
+.post-card {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+  margin-bottom: 24px;
+  display: flex;
+  padding: 16px;
+  border-left: 4px solid #ff4500;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+
+/* dark mode button */
+/* From Uiverse.io by andrew-demchenk0 */ 
+.theme {
+  --bg-color: #111;
+  --main-color: #fefefe;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--bg-color);
+  border-radius: 100%;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+}
+
+.input {
+  cursor: pointer;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  opacity: 0;
+}
+
+.icon {
+  position: absolute;
+  top: calc(50% -13px);
+  left: calc(50% -13px);
+  width: 26px;
+  height: 26px;
+}
+
+.icon.icon-moon {
+  fill: var(--main-color);
+}
+
+.icon.icon-sun {
+  stroke: var(--main-color);
+  display: none;
+}
+
+.input:checked ~ .icon.icon-sun {
+  display: block;
+}
+
+.input:checked ~ .icon.icon-moon {
+  display: none;
+}
+
+.theme:active {
+  box-shadow: 0px 0px var(--main-color);
+  transform: translate(3px, 3px);
+}
+
+/* Vote section */
+.vote-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 1rem;
+  min-width: 40px;
+}
+
+.vote-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #878a8c;
+  margin: 0.2rem 0;
+  transition: color 0.2s;
+}
+
+.vote-btn.active {
+  color: #ff4500;
+  font-weight: bold;
+}
+
+.vote-btn:hover {
+  color: #ff4500;
+}
+
+.vote-count {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #1a1a1b;
+  margin: 0.1rem 0 0.3rem 0;
+}
+
+.post-content {
+  flex: 1;
+}
+
+.post-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-link h3 {
+  margin: 0 0 0.3rem 0;
+  font-size: 1.25rem;
+  color: #222;
+  transition: color 0.2s;
+}
+.post-link:hover h3 {
+  color: #ff4500;
+}
+
+.post-link p {
+  margin: 0 0 0.5rem 0;
+  color: #444;
+  font-size: 1.05rem;
+}
+
+.post-meta {
+  color: #888;
+  font-size: 0.95rem;
+  margin-top: 0.2rem;
+}
+
+.comment-card {
+  background: #f8f9fa;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  margin-bottom: 1.1rem;
+  margin-left: 2.2rem;
+  padding: 10px 14px 10px 10px;
+  display: flex;
+  align-items: flex-start;
+  border-left: 3px solid #ffb000;
+  font-size: 0.97rem;
+}
+@media (max-width: 600px) {
+  .comment-card {
+    margin-left: 0.5rem;
+    padding: 8px 6px 8px 6px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    gap: 0;
+    padding: 0 1rem;
+  }
+  .filter-sidebar {
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Auth card for login/register */
+.auth-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 2rem 2.2rem 1.5rem 2.2rem;
+  max-width: 400px;
+  margin: 2.5rem auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.form-control {
+  margin-bottom: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.form-control label {
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  color: #444;
+}
+.form-control input,
+.form-control textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  background: #f7f7f7;
+  transition: border 0.2s;
+}
+.form-control input:focus {
+  border: 1.5px solid #ff4500;
+  outline: none;
+  background: #fff;
+}
+.btn {
+  background: #ff4500;
+  color: #fff;
+  border: none;
+  padding: 0.7rem 0;
+  border-radius: 5px;
+  font-size: 1.08rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.2rem;
+  transition: background 0.2s;
+  width: 100%;           /* Make the button stretch to the width of the form */
+  max-width: 320px;      /* But not too wide on large screens */
+  margin-left: auto;
+  margin-right: auto;
+  letter-spacing: 1px;
+  box-shadow: 0 1px 4px rgba(255,69,0,0.07);
+}
+.btn:hover {
+  background: #e03d00;
+}
+.or-separator {
+  text-align: center;
+  color: #bbb;
+  margin: 1.2rem 0 0.7rem 0;
+  font-size: 1rem;
+  letter-spacing: 1px;
+}
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-bottom: 0.5rem;
+}
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0;
+  border-radius: 5px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.2s;
+}
+.social-btn.facebook {
+  background: #3b5998;
+}
+.social-btn.facebook:hover {
+  background: #2d4373;
+}
+.social-btn.google {
+  background: #db4437;
+}
+.social-btn.google:hover {
+  background: #b3311a;
+}
+.social-btn.github {
+  background: #666464;
+}
+.social-btn.github:hover {
+  background: #837f7f;
+}
+@media (max-width: 500px) {
+  .auth-card {
+    padding: 1.2rem 0.7rem;
+  }
+}
+
+/* 404 Error Page Styles */
+.error-page {
+  background: #dae0e6;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.error-container, .container.error-container {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  text-align: center;
+  max-width: 400px;
+  margin: 2rem auto;
+}
+.error-container h1, .container.error-container h1 {
+  font-size: 4rem;
+  color: #ff4500;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+.error-container p, .container.error-container p {
+  color: #555;
+  font-size: 1.15rem;
+  margin-bottom: 2rem;
+}
+.home-btn {
+  background: #ff4500;
+  color: #fff;
+  border: none;
+  padding: 0.7rem 0;
+  border-radius: 5px;
+  font-size: 1.08rem;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+  letter-spacing: 1px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s;
+}
+.home-btn:hover {
+  background: #e03d00;
+}
+
+
+/* Category list */
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+}
+
+.category-list li {
+  margin-bottom: 0.5rem;
+}
+
+.category-list a {
+  display: block;
+  padding: 0.5rem 0.8rem;
+  border-radius: 5px;
+  color: #222;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+/* Category list item hover effect */
+.category-list a:hover,
+.category-list a:focus {
+  background: #f6f7f8;
+  color: #ff4500;
+}
+
+.category-list strong {
+  color: #ff4500;
+}
+
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  background: #f6f7f8;
+  color: #444;
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px solid #ccc;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  user-select: none;
+}
+
+.category-pill input[type="checkbox"] {
+  display: none;
+}
+
+
+
+.category-pill input[type="checkbox"]:checked + span,
+.category-pill:has(input[type="checkbox"]:checked) {
+  background: #ff4500;
+  color: #fff;
+  border-color: #ff4500;
+}
+
+
+
+/* Ensure text wraps properly in posts and comments */
+.post-content h2,
+.post-content h3,
+.post-content p,
+.comment-card .post-content p,
+.post-card .post-content h3,
+.post-card .post-content p {
+  word-wrap: break-word; /* Ensure long words break properly */
+  overflow-wrap: break-word; /* Modern browsers alternative */
+  white-space: pre-wrap; /* Preserve whitespace and wrap as needed */
+}
+
+.post-content, .post-card .post-content {
+  max-width: 100%; /* Ensure the container doesn't exceed its parent's width */
+  overflow: hidden; /* Hide overflowing content */
+}
+
+textarea, input[type="text"] {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.user-comments {
+   background: #f7f7f7;
+   padding: 1rem;
+   border-left: 4px solid #ffa500;
+   border-radius: 4px;
+   margin-top: 1rem;
+}
+
+/* —————————————————————————— */
+/* Post & Comment Edit/Delete UI */
+/* —————————————————————————— */
+
+.post-actions {
+  margin-top: 0.75rem;
+}
+
+.post-actions .nav-button {
+  margin-right: 0.5rem;
+}
+
+.edit-form {
+  display: none;
+  margin-top: 0.75rem;
+}
+
+.edit-form textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
