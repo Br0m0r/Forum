@@ -1,72 +1,92 @@
-# Forum Notification System
+# Forum Web Application
 
 ## Overview
-The forum application includes a comprehensive notification system that alerts users when someone interacts with their content. The system is designed to be efficient, responsive, and provide detailed tracking of user interactions.
+A complete web forum built in Go featuring user authentication, post/comment system, image uploads, OAuth integration, and advanced features. This project implements four main components: base forum functionality, OAuth authentication, image upload capabilities, and advanced user activity tracking.
 
-## Core Components
+## Features
 
-### Backend (notifications.go)
-The notification backend provides four primary functions:
+### 🔐 Authentication System
+- **Local Registration/Login**: Email, username, password-based authentication
+- **OAuth Integration**: Google and GitHub authentication
+- **Session Management**: Cookie-based sessions with expiration
+- **Password Security**: bcrypt encryption for stored passwords
 
-#### 1. Create()
-- Creates new notification records when users interact with content
-- Parameters:
-  - `userID`: User receiving the notification
-  - `initiatorID`: User who triggered the action (liker, commenter)
-  - `postID`: Related post ID
-  - `commentID`: Optional comment reference (nil for post notifications)
-  - `kind`: Notification type (like, dislike, comment)
-- Handles nullable comment IDs for post-level notifications
-- Includes detailed logging for debugging
+### 💬 Forum Core Features
+- **Posts & Comments**: Create, view, and interact with forum content
+- **Categories**: Associate posts with one or more categories
+- **Likes/Dislikes**: Rate posts and comments (registered users only)
+- **Filtering**: Filter posts by categories, created posts, or liked posts
+- **Notifications**: Real-time notification system for user interactions
 
-#### 2. UnreadCount()
-- Returns the count of unread notifications for a specific user
-- Used to display the notification badge in the UI
-- Simple and efficient query
+### 🖼️ Image Upload
+- **Post Images**: Attach images to forum posts
+- **Supported Formats**: JPEG, PNG, GIF
+- **Size Limit**: Maximum 20MB per image
+- **Error Handling**: Proper validation and user feedback
 
-#### 3. List()
-- Retrieves all notifications for a user, sorted by newest first
-- Joins with users table to include initiator information
-- Properly handles nullable comment IDs
-- Returns complete notification objects with all metadata
-- Includes comprehensive logging
+### ⭐ Advanced Features
+- **Real-time Notifications**: Users get notified when their posts are liked/disliked or commented on
+- **Activity Tracking**: Personal activity page showing:
+  - User's created posts
+  - Posts where user left likes/dislikes
+  - Comments user has made with context
+- **Content Management**: Edit and delete posts and comments
+- **User Activity Dashboard**: Comprehensive view of user interactions
 
-#### 4. MarkAllRead()
-- Marks all notifications as read for a specific user
-- Used when a user views their notifications page
-- Reports count of affected notifications for logging
+## Quick Start
 
-## Implementation Details
+### Prerequisites
+- Go 1.19+
+- Docker (recommended)
 
-- **Security**: Uses parameterized SQL queries to prevent SQL injection
-- **Data Integrity**: Transaction-safe database operations
-- **Error Handling**: Thorough error handling with contextual logging
-- **Flexibility**: Support for multiple notification types (likes, dislikes, comments)
-- **Robustness**: Proper handling of nullable fields with `sql.NullInt64`
-- **Debugging**: Extensive logging throughout for debugging and audit trails
+### Using Docker
+```bash
+# Build and run with Docker
+docker build -t forum .
+docker run -p 8080:8080 forum
+```
 
-## Notification Types
+### Manual Setup
+```bash
+# Clone and run
+git clone <repository-url>
+cd forum
+go mod tidy
+go run .
+```
 
-The system supports several notification types:
-- 👍 Post likes/dislikes
-- 💬 Comment likes/dislikes
-- 📝 New comments on posts
+Visit `http://localhost:8080` to access the forum.
 
-## Data Flow
+## Project Structure
 
-1. User action triggers notification creation (like, comment, etc.)
-2. Backend `Create()` function inserts notification record
-3. Frontend polls `UnreadCount()` to display notification badge
-4. User views notifications via `List()` function
-5. Viewing notifications page triggers `MarkAllRead()`
+```
+├── main.go              # Application entry point
+├── handlers.go          # HTTP request handlers
+├── routes.go           # Route definitions
+├── authentication/     # OAuth and login logic
+├── post/              # Post management
+├── likes/             # Like/dislike system
+├── notifications/     # Notification system
+├── db/               # Database operations
+├── static/           # CSS, JS, images
+└── utils/            # Helper functions and models
+```
 
-## Integration Points
+## Database
+- **SQLite**: Local database storage
+- **Schema**: Users, posts, comments, likes, notifications tables
+- **Security**: Parameterized queries prevent SQL injection
 
-| Component | Integration |
-|-----------|-------------|
-| Frontend | Polling mechanism updates notification count every 15 seconds |
-| User Interface | Badge in header shows unread count |
-| Database | Uses transactions for data integrity |
-| Logging | Detailed logs for monitoring and debugging |
+## Technologies Used
+- **Backend**: Go (standard library + sqlite3, bcrypt, uuid)
+- **Frontend**: HTML, CSS, JavaScript
+- **Database**: SQLite
+- **Deployment**: Docker
+- **Authentication**: OAuth 2.0 (Google, GitHub)
 
-The notification system effectively separates database operations from presentation logic, creating a maintainable and extensible notification framework.
+## Key Implementation Notes
+- Session-based authentication with secure cookies
+- Responsive design with dark/light mode toggle
+- Real-time notification updates (15-second polling)
+- Image validation and secure file handling
+- Comprehensive error handling and logging
