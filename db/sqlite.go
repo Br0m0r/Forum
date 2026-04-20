@@ -7,62 +7,36 @@ import (
 	"os"
 
 	_ "github.com/mattn/go-sqlite3"
-	// SQLite driver
-	// with the _ in start, we only run the package's init function
-	// we do NOT make its exported functions, types, and variables available to use directly
-	// we do not have to use the package elsewhere in the project
 )
 
 var Database *sql.DB
 
 func InitDB() error {
 
-	// --------------------------------------------------------------------------------------------------
-	// checking if the "./db" directory exists, if not we create it
-
 	_, statErr := os.Stat("./db")
-	// os.Stat returns info about a file/folder or an error if it doesnt exist
-	// we only need the error here, so we can use it in next check
-
 	if os.IsNotExist(statErr) {
-		// os.IsNotExist only takes as arguments error values (errors from os.Stat, os.Open etc)
-		// it returns True if the error from os.Stat indicates that the file/directory doesn't exist or
-		// False for any other error (the file/folder exists or permission issues etc)
-
 		makeDirErr := os.MkdirAll("./db", 0755)
 		if makeDirErr != nil {
 			return fmt.Errorf("failed to create database directory: %v", makeDirErr)
 		}
 	}
 
-	// --------------------------------------------------------------------------------------------------
-	// opening database connection and storing it in the variable "database" we created in start
-
 	var openErr error
-
 	Database, openErr = sql.Open("sqlite3", "./db/forum.db")
-	// sql.Open returns: *sql.DB, error
 	if openErr != nil {
 		return fmt.Errorf("failed to open database: %v", openErr)
 	}
 
 	pingErr := Database.Ping()
-	// Ping() is a method of the sql.DB struct (func (db *sql.DB) Ping() error)
 	if pingErr != nil {
 		return fmt.Errorf("failed to connect to database: %v", pingErr)
 	}
 
-	// Exec() - method of sql.DB struct
-	// executes any SQL statement that does NOT return rows, so it works for
-	// enabling foreign keys and creating tables
-	//(by default, foreign key constraints are disabled in SQLite)
 	_, foreignKeyErr := Database.Exec("PRAGMA foreign_keys = ON;")
 	if foreignKeyErr != nil {
 		return fmt.Errorf("failed to enable foreign keys: %v", foreignKeyErr)
 	}
 
-	// --------------------------------------------------------------------------------------------------
-	// creating the required tables using the custom function we have defined
 	createTablesErr := createTables()
 	if createTablesErr != nil {
 		return fmt.Errorf("failed to create tables: %v", createTablesErr)
@@ -79,9 +53,6 @@ func CloseDB() error {
 	}
 	return nil
 }
-
-// ======================================================================================================
-// ======================================================================================================
 
 func createTables() error {
 	userTable := `CREATE TABLE IF NOT EXISTS users (

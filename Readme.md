@@ -1,92 +1,62 @@
-# Forum Web Application
+# Forum
 
-## Overview
-A complete web forum built in Go featuring user authentication, post/comment system, image uploads, OAuth integration, and advanced features. This project implements four main components: base forum functionality, OAuth authentication, image upload capabilities, and advanced user activity tracking.
+A web forum built with Go and SQLite featuring authentication (local + OAuth), posts, comments, likes/dislikes, image uploads, notifications, and user activity tracking.
 
 ## Features
 
-### 🔐 Authentication System
-- **Local Registration/Login**: Email, username, password-based authentication
-- **OAuth Integration**: Google and GitHub authentication
-- **Session Management**: Cookie-based sessions with expiration
-- **Password Security**: bcrypt encryption for stored passwords
+- **Authentication** — Local register/login with bcrypt, OAuth via Google and GitHub, cookie-based sessions
+- **Posts & Comments** — Create, edit, delete; associate posts with categories; filter by category
+- **Likes/Dislikes** — Vote on posts and comments (registered users only)
+- **Image Uploads** — Attach JPEG, PNG, or GIF images to posts (max 20MB)
+- **Notifications** — Get notified when your content receives likes, dislikes, or comments
+- **Activity Dashboard** — View your authored posts, reacted posts, and comments
 
-### 💬 Forum Core Features
-- **Posts & Comments**: Create, view, and interact with forum content
-- **Categories**: Associate posts with one or more categories
-- **Likes/Dislikes**: Rate posts and comments (registered users only)
-- **Filtering**: Filter posts by categories, created posts, or liked posts
-- **Notifications**: Real-time notification system for user interactions
-
-### 🖼️ Image Upload
-- **Post Images**: Attach images to forum posts
-- **Supported Formats**: JPEG, PNG, GIF
-- **Size Limit**: Maximum 20MB per image
-- **Error Handling**: Proper validation and user feedback
-
-### ⭐ Advanced Features
-- **Real-time Notifications**: Users get notified when their posts are liked/disliked or commented on
-- **Activity Tracking**: Personal activity page showing:
-  - User's created posts
-  - Posts where user left likes/dislikes
-  - Comments user has made with context
-- **Content Management**: Edit and delete posts and comments
-- **User Activity Dashboard**: Comprehensive view of user interactions
-
-## Quick Start
+## Getting Started
 
 ### Prerequisites
-- Go 1.19+
-- Docker (recommended)
 
-### Using Docker
+- [Go 1.19+](https://go.dev/dl/) for building from source
+- [Docker](https://docs.docker.com/get-docker/) for containerized deployment
+
+### Run with Docker
+
 ```bash
-# Build and run with Docker
 docker build -t forum .
-docker run -p 8080:8080 forum
+docker run -it --rm -p 8080:8080 forum
 ```
 
-### Manual Setup
+### Run from Source
+
 ```bash
-# Clone and run
 git clone <repository-url>
 cd forum
 go mod tidy
 go run .
 ```
 
-Visit `http://localhost:8080` to access the forum.
+The server starts at **http://localhost:8080**.
 
 ## Project Structure
 
 ```
-├── main.go              # Application entry point
-├── handlers.go          # HTTP request handlers
-├── routes.go           # Route definitions
-├── authentication/     # OAuth and login logic
-├── post/              # Post management
-├── likes/             # Like/dislike system
-├── notifications/     # Notification system
-├── db/               # Database operations
-├── static/           # CSS, JS, images
-└── utils/            # Helper functions and models
+main.go                 Entry point
+handlers.go             HTTP handlers
+routes.go               Route definitions
+authentication/         Login, register, OAuth
+post/                   Post and comment CRUD, filtering
+likes/                  Like/dislike logic
+notifications/          Notification CRUD
+db/                     SQLite initialization and schema
+utils/                  Shared models and helpers
+static/                 CSS, JS, templates, uploaded images
 ```
 
-## Database
-- **SQLite**: Local database storage
-- **Schema**: Users, posts, comments, likes, notifications tables
-- **Security**: Parameterized queries prevent SQL injection
+## Tech Stack
 
-## Technologies Used
-- **Backend**: Go (standard library + sqlite3, bcrypt, uuid)
-- **Frontend**: HTML, CSS, JavaScript
-- **Database**: SQLite
-- **Deployment**: Docker
-- **Authentication**: OAuth 2.0 (Google, GitHub)
-
-## Key Implementation Notes
-- Session-based authentication with secure cookies
-- Responsive design with dark/light mode toggle
-- Real-time notification updates (15-second polling)
-- Image validation and secure file handling
-- Comprehensive error handling and logging
+| Layer          | Technology                              |
+|----------------|-----------------------------------------|
+| Backend        | Go (standard library)                   |
+| Database       | SQLite (`mattn/go-sqlite3`)             |
+| Auth           | bcrypt, UUID sessions, OAuth 2.0        |
+| Frontend       | HTML, CSS, vanilla JavaScript           |
+| Deployment     | Docker (multi-stage Alpine build)       |

@@ -7,14 +7,7 @@ import (
 	"net/http"
 )
 
-// we read and parse all .html files in the templates directory
-// and we combine them into a single *template.Template object stored in tmpl variable
-// if we dont want to parse/load all templates in advance, like in larger projects,
-// we can just load each time only the one we need (via a custom function):
 var Tmpl = template.Must(template.ParseGlob("static/templates/*.html"))
-
-// the third argument is the data we provide for the template execution
-// it corresponds to the {{.}} part of the .html file
 func RenderTemplate(w http.ResponseWriter, name string, data any) {
 	err := Tmpl.ExecuteTemplate(w, name, data)
 	if err != nil {
@@ -23,7 +16,7 @@ func RenderTemplate(w http.ResponseWriter, name string, data any) {
 	}
 }
 
-// middleware <<see routes.go>>
+// RequireAuth is middleware that redirects unauthenticated users to the home page.
 func RequireAuth(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		_, err := r.Cookie("session_token")
@@ -42,7 +35,7 @@ func GetUserID(cookie string) int {
 		Scan(&userID)
 	if err != nil {
 		log.Printf("GetUserID error: %v", err)
-		return -1 // or 0 if you prefer, but -1 is clearer for "not found"
+		return -1
 	}
 	return userID
 }
@@ -62,13 +55,8 @@ func GetUserName(cookie string) string {
 	var username string
 
 	userRow := db.Database.QueryRow("SELECT users.username FROM users INNER JOIN sessions ON users.id = sessions.user_id WHERE sessions.id = ?", cookie)
-	userRowErr := userRow.Scan(&username)
-	if userRowErr != nil {
+	if err := userRow.Scan(&username); err != nil {
 		return ""
 	}
-	if username != "" {
-		return username
-	} else {
-		return ""
-	}
+	return username
 }

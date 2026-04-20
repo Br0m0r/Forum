@@ -27,9 +27,7 @@ type User struct {
 	ID       int64
 	Username string
 	Email    string
-	Password *string
-	// the * is useful in situations where the password may be nullable (i.e., it can be nil or not set)
-	// strings cant be null, but pointers to a string can
+	Password  *string
 	CreatedAt time.Time
 }
 type Post struct {
